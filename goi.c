@@ -65,7 +65,7 @@ int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols
     memset(neighborCounts, 0, MAX_FACTIONS * sizeof(int));
 
     // count neighbors (and self)
-    #pragma omp parallel for shared(neighborCounts) private(dx, dy)
+    //#pragma omp parallel for shared(neighborCounts) private(dx, dy)
     for (dy = -1; dy <= 1; dy++){
         for (dx = -1; dx <= 1; dx++){
             int faction = getValueAt(currWorld, nRows, nCols, row + dy, col + dx);
@@ -85,7 +85,7 @@ int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols
         int newFaction = DEAD_FACTION;
         int faction;
         // start at 1 because we ignore dead neighbors
-        //#pragma omp parallel for shared(neighborCounts) private(faction)
+        #pragma omp parallel for shared(neighborCounts) private(faction)
         for (faction = DEAD_FACTION + 1; faction < MAX_FACTIONS; faction++)
         {
             int count = neighborCounts[faction];
@@ -106,7 +106,7 @@ int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols
 
         int hostileCount = 0;
         int faction;
-        //#pragma omp parallel for shared(neighborCounts) private(faction)
+        #pragma omp parallel for shared(neighborCounts) private(faction)
         for (faction = DEAD_FACTION + 1; faction < MAX_FACTIONS; faction++)
         {
             if (faction == cellFaction)
@@ -155,7 +155,7 @@ int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nC
     {
         return -1;
     }
-    //#pragma omp parallel for private(row, col)
+    #pragma omp parallel for private(row, col)
     for (row = 0; row < nRows; row++)
     {
         for (col = 0; col < nCols; col++)
