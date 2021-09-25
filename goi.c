@@ -139,14 +139,8 @@ int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols
  */
 int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nCols, int nInvasions, const int *invasionTimes, int **invasionPlans)
 {
-    #pragma omp parallel
-    {
-        nThreads = omp_get_num_threads();
-    }
     // death toll due to fighting
     int deathToll = 0;
-    int row;
-    int col;
     // init the world!
     // we make a copy because we do not own startWorld (and will perform free() on world)
     int *world = malloc(sizeof(int) * nRows * nCols);
@@ -154,10 +148,10 @@ int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nC
     {
         return -1;
     }
-    #pragma omp parallel for private(row, col) num_threads(nThreads)
-    for (row = 0; row < nRows; row++)
+    #pragma omp parallel for num_threads(nThreads)
+    for (int row = 0; row < nRows; row++)
     {
-        for (col = 0; col < nCols; col++)
+        for (int col = 0; col < nCols; col++)
         {
             setValueAt(world, nRows, nCols, row, col, getValueAt(startWorld, nRows, nCols, row, col));
         }
@@ -187,6 +181,7 @@ int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nC
                 free(world);
                 return -1;
             }
+            #pragma omp parallel for num_threads(nThreads)
             for (int row = 0; row < nRows; row++)
             {
                 for (int col = 0; col < nCols; col++)
@@ -210,6 +205,7 @@ int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nC
         }
 
         // get new states for each cell
+        #pragma omp parallel for num_threads(nThreads)
         for (int row = 0; row < nRows; row++)
         {
             for (int col = 0; col < nCols; col++)
