@@ -140,7 +140,7 @@ int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nC
 {
     #pragma omp parallel
     {
-        nthreads = omp_get_num_threads();
+        nThreads = omp_get_num_threads();
     }
     // death toll due to fighting
     int deathToll = 0;
