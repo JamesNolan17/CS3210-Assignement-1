@@ -46,12 +46,12 @@ bool willFight(int n) {
  */
 int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols, int row, int col, bool *diedDueToFighting)
 {
+    int dx, dy
     // we'll explicitly set if it was death due to fighting
     *diedDueToFighting = false;
 
     // faction of this cell
     int cellFaction = getValueAt(currWorld, nRows, nCols, row, col);
-
     // did someone just get landed on?
     if (invaders != NULL && getValueAt(invaders, nRows, nCols, row, col) != DEAD_FACTION)
     {
@@ -64,7 +64,7 @@ int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols
     memset(neighborCounts, 0, MAX_FACTIONS * sizeof(int));
 
     // count neighbors (and self)
-    #pragma omp parallel for
+    #pragma omp parallel for shared(neighborCounts) private(dx, dy)
     for (int dy = -1; dy <= 1; dy++){
         for (int dx = -1; dx <= 1; dx++){
             int faction = getValueAt(currWorld, nRows, nCols, row + dy, col + dx);
@@ -82,10 +82,10 @@ int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols
 
         // by default, no birth
         int newFaction = DEAD_FACTION;
-
+        int faction;
         // start at 1 because we ignore dead neighbors
-        #pragma omp parallel for
-        for (int faction = DEAD_FACTION + 1; faction < MAX_FACTIONS; faction++)
+        #pragma omp parallel for shared(neighborCounts) private(faction)
+        for (faction = DEAD_FACTION + 1; faction < MAX_FACTIONS; faction++)
         {
             int count = neighborCounts[faction];
             if (isBirthable(count)) newFaction = faction;
@@ -104,8 +104,9 @@ int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols
          */
 
         int hostileCount = 0;
-        #pragma omp parallel for
-        for (int faction = DEAD_FACTION + 1; faction < MAX_FACTIONS; faction++)
+        int faction;
+        #pragma omp parallel for shared(neighborCounts) private(faction)
+        for (faction = DEAD_FACTION + 1; faction < MAX_FACTIONS; faction++)
         {
             if (faction == cellFaction)
             {
@@ -144,7 +145,8 @@ int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nC
     }
     // death toll due to fighting
     int deathToll = 0;
-
+    int row;
+    int col;
     // init the world!
     // we make a copy because we do not own startWorld (and will perform free() on world)
     int *world = malloc(sizeof(int) * nRows * nCols);
@@ -152,10 +154,10 @@ int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nC
     {
         return -1;
     }
-    #pragma omp parallel for
-    for (int row = 0; row < nRows; row++)
+    #pragma omp parallel for private(row, col)
+    for (row = 0; row < nRows; row++)
     {
-        for (int col = 0; col < nCols; col++)
+        for (col = 0; col < nCols; col++)
         {
             setValueAt(world, nRows, nCols, row, col, getValueAt(startWorld, nRows, nCols, row, col));
         }
