@@ -46,7 +46,7 @@ bool willFight(int n) {
  */
 int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols, int row, int col, bool *diedDueToFighting)
 {
-    int dx, dy
+    int dx, dy;
     // we'll explicitly set if it was death due to fighting
     *diedDueToFighting = false;
 
@@ -65,8 +65,8 @@ int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols
 
     // count neighbors (and self)
     #pragma omp parallel for shared(neighborCounts) private(dx, dy)
-    for (int dy = -1; dy <= 1; dy++){
-        for (int dx = -1; dx <= 1; dx++){
+    for (dy = -1; dy <= 1; dy++){
+        for (dx = -1; dx <= 1; dx++){
             int faction = getValueAt(currWorld, nRows, nCols, row + dy, col + dx);
             if (faction >= DEAD_FACTION) neighborCounts[faction]++;
         }
