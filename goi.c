@@ -138,6 +138,10 @@ int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols
  */
 int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nCols, int nInvasions, const int *invasionTimes, int **invasionPlans)
 {
+    #pragma omp parallel
+    {
+        threads = omp_get_num_threads();
+    }
     // death toll due to fighting
     int deathToll = 0;
 
