@@ -17,6 +17,7 @@
 #include "settings.h"
 #include "goi_omp.h"
 //#include "goi_pthread.h"
+#include <time.h>
 
 
 int readParam(FILE *fp, char **line, size_t *len, int *param);
@@ -177,7 +178,11 @@ int main(int argc, char *argv[])
     }
 
     // run the simulation
+    int start = clock();
     int warDeathToll = goi(nThreads, nGenerations, startWorld, nRows, nCols, nInvasions, invasionTimes, invasionPlans);
+    int finish = clock();
+    double duration = (double) (finish - start) / CLOCKS_PER_SEC * 1000;
+    printf("Duration: %f", duration);
 
     // output the result
     fprintf(outputFile, "%d", warDeathToll);
