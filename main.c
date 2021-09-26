@@ -15,7 +15,7 @@
 #include "util.h"
 #include "exporter.h"
 #include "settings.h"
-#include "goi.h"
+#include "goi_openmp.h"
 
 int readParam(FILE *fp, char **line, size_t *len, int *param);
 int readWorldLayout(FILE *fp, char **line, size_t *len, int *world, int nRows, int nCols);
@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
     FILE *inputFile;
     char *line = NULL;
     size_t len = 0;
+
 
     if (argc < 4)
     {
