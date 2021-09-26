@@ -141,7 +141,6 @@ void *thread_task(void *threadData) {
             thread_data_ptr->numDeath += 1;
         }
     }
-    exit(0);
 }
 
 /**
