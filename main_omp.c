@@ -12,10 +12,12 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <errno.h>
-#include "../../../Downloads/A1_code 2/util.h"
-#include "../../../Downloads/A1_code 2/exporter.h"
-#include "../../../Downloads/A1_code 2/settings.h"
-#include "goi.h"
+#include "util.h"
+#include "exporter.h"
+#include "settings.h"
+#include "goi_omp.h"
+//#include "goi_pthread.h"
+
 
 int readParam(FILE *fp, char **line, size_t *len, int *param);
 int readWorldLayout(FILE *fp, char **line, size_t *len, int *world, int nRows, int nCols);
@@ -38,6 +40,7 @@ int main(int argc, char *argv[])
     FILE *inputFile;
     char *line = NULL;
     size_t len = 0;
+
 
     if (argc < 4)
     {
@@ -206,7 +209,7 @@ int readParam(FILE *fp, char **line, size_t *len, int *param)
     {
         return -1;
     }
-    return 0;
+    return                              0;
 }
 
 // readWorldLayout reads a world layout specified by nRows and nCols, advancing the read head by

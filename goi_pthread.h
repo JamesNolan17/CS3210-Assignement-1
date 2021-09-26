@@ -8,14 +8,16 @@
 int goi_pthread(int nThreads, int nGenerations, const int *startWorld, int nRows, int nCols, int nInvasions, const int *invasionTimes, int **invasionPlans);
 
 struct thread_data{
-    int *currWorld;
-    int *invaders;
+    const int *currWorld;
+    const int *invaders;
     int nRows;
     int nCols;
-    int row[100];
-    int col[100];
+    int row[1000];
+    int col[1000];
     int numGrid;
+    int numRead;
     int numDeath;
+    int nextstate[1000];
 };
 
 #endif //A1_CODE_GOI_PTHREAD_H

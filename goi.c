@@ -1,13 +1,12 @@
 #include <stdio.h>
-#include <omp.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
 #include <errno.h>
-#include "util.h"
-#include "exporter.h"
-#include "settings.h"
+#include "../../../Downloads/A1_code 2/util.h"
+#include "../../../Downloads/A1_code 2/exporter.h"
+#include "../../../Downloads/A1_code 2/settings.h"
 
 // including the "dead faction": 0
 #define MAX_FACTIONS 10
@@ -47,12 +46,12 @@ bool willFight(int n) {
  */
 int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols, int row, int col, bool *diedDueToFighting)
 {
-    int dx, dy;
     // we'll explicitly set if it was death due to fighting
     *diedDueToFighting = false;
 
     // faction of this cell
     int cellFaction = getValueAt(currWorld, nRows, nCols, row, col);
+
     // did someone just get landed on?
     if (invaders != NULL && getValueAt(invaders, nRows, nCols, row, col) != DEAD_FACTION)
     {
@@ -65,10 +64,15 @@ int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols
     memset(neighborCounts, 0, MAX_FACTIONS * sizeof(int));
 
     // count neighbors (and self)
-    for (dy = -1; dy <= 1; dy++){
-        for (dx = -1; dx <= 1; dx++){
+    for (int dy = -1; dy <= 1; dy++)
+    {
+        for (int dx = -1; dx <= 1; dx++)
+        {
             int faction = getValueAt(currWorld, nRows, nCols, row + dy, col + dx);
-            if (faction >= DEAD_FACTION) neighborCounts[faction]++;
+            if (faction >= DEAD_FACTION)
+            {
+                neighborCounts[faction]++;
+            }
         }
     }
 
@@ -82,13 +86,15 @@ int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols
 
         // by default, no birth
         int newFaction = DEAD_FACTION;
-        int faction;
+
         // start at 1 because we ignore dead neighbors
-        //#pragma omp parallel for shared(neighborCounts) private(faction)
-        for (faction = DEAD_FACTION + 1; faction < MAX_FACTIONS; faction++)
+        for (int faction = DEAD_FACTION + 1; faction < MAX_FACTIONS; faction++)
         {
             int count = neighborCounts[faction];
-            if (isBirthable(count)) newFaction = faction;
+            if (isBirthable(count))
+            {
+                newFaction = faction;
+            }
         }
 
         return newFaction;
@@ -104,9 +110,7 @@ int getNextState(const int *currWorld, const int *invaders, int nRows, int nCols
          */
 
         int hostileCount = 0;
-        int faction;
-        //#pragma omp parallel for shared(neighborCounts) private(faction)
-        for (faction = DEAD_FACTION + 1; faction < MAX_FACTIONS; faction++)
+        for (int faction = DEAD_FACTION + 1; faction < MAX_FACTIONS; faction++)
         {
             if (faction == cellFaction)
             {
@@ -141,6 +145,7 @@ int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nC
 {
     // death toll due to fighting
     int deathToll = 0;
+
     // init the world!
     // we make a copy because we do not own startWorld (and will perform free() on world)
     int *world = malloc(sizeof(int) * nRows * nCols);
@@ -148,7 +153,6 @@ int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nC
     {
         return -1;
     }
-    #pragma omp parallel for num_threads(nThreads)
     for (int row = 0; row < nRows; row++)
     {
         for (int col = 0; col < nCols; col++)
@@ -181,7 +185,6 @@ int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nC
                 free(world);
                 return -1;
             }
-            #pragma omp parallel for num_threads(nThreads)
             for (int row = 0; row < nRows; row++)
             {
                 for (int col = 0; col < nCols; col++)
@@ -205,7 +208,6 @@ int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nC
         }
 
         // get new states for each cell
-        #pragma omp parallel for num_threads(nThreads)
         for (int row = 0; row < nRows; row++)
         {
             for (int col = 0; col < nCols; col++)
