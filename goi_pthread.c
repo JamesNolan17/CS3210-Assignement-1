@@ -164,7 +164,7 @@ void *thread_task( void* threadData){
  * goi does not own startWorld, invasionTimes or invasionPlans and should not modify or attempt to free them.
  * nThreads is the number of threads to simulate with. It is ignored by the sequential implementation.
  */
-int goi(int nThreads, int nGenerations, const int *startWorld, int nRows, int nCols, int nInvasions, const int *invasionTimes, int **invasionPlans)
+int goi_pthread(int nThreads, int nGenerations, const int *startWorld, int nRows, int nCols, int nInvasions, const int *invasionTimes, int **invasionPlans)
 {
     //init the pthreads
     pthread_t threads[nThreads];

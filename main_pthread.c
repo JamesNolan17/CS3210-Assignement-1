@@ -15,7 +15,6 @@
 #include "util.h"
 #include "exporter.h"
 #include "settings.h"
-//#include "goi_openmp.h"
 #include "goi_pthread.h"
 
 
@@ -177,7 +176,7 @@ int main(int argc, char *argv[])
     }
 
     // run the simulation
-    int warDeathToll = goi(nThreads, nGenerations, startWorld, nRows, nCols, nInvasions, invasionTimes, invasionPlans);
+    int warDeathToll = goi_pthread(nThreads, nGenerations, startWorld, nRows, nCols, nInvasions, invasionTimes, invasionPlans);
 
     // output the result
     fprintf(outputFile, "%d", warDeathToll);
