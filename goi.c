@@ -4,9 +4,9 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <errno.h>
-#include "../../../Downloads/A1_code 2/util.h"
-#include "../../../Downloads/A1_code 2/exporter.h"
-#include "../../../Downloads/A1_code 2/settings.h"
+#include "util.h"
+#include "exporter.h"
+#include "settings.h"
 
 // including the "dead faction": 0
 #define MAX_FACTIONS 10
