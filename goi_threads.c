@@ -9,7 +9,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <pthread.h>
-#include "goi_pthread.h"
+#include "goi_threads.h"
 #include "util.h"
 #include "exporter.h"
 #include "settings.h"

@@ -18,7 +18,7 @@ for sample_id in range(0, 7):
 
     for thread_number in range(1, 65, 8):
         #T1 = time.time()
-        #os.system(f"./goi_threads.out {path}/sample_inputs/sample{sample_id}.in test.out {thread_number}")
+        #os.system(f"./goi_threads.out {path}/inputs/sample{sample_id}.in test.out {thread_number}")
         #T2 = time.time()
         #time_taken_ms = (T2 - T1) * 1000
         #result_pthread[sample_id][thread_number] = time_taken_ms

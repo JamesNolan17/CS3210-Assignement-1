@@ -15,7 +15,7 @@
 #include "util.h"
 #include "exporter.h"
 #include "settings.h"
-#include "goi_pthread.h"
+#include "goi_threads.h"
 #include <time.h>
 
 
