@@ -12,12 +12,12 @@ struct thread_data{
     const int *invaders;
     int nRows;
     int nCols;
-    int row[1000];
-    int col[1000];
+    int row[5000];
+    int col[5000];
     int numGrid;
     int numRead;
     int numDeath;
-    int nextstate[1000];
+    int nextstate[5000];
 };
 
 #endif //A1_CODE_GOI_PTHREAD_H
